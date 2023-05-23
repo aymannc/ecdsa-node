@@ -1,31 +1,42 @@
-import server from "./server";
+import axiosInstance from "./axiosInstance.js";
+import {useState} from "react";
 
-function Wallet({ address, setAddress, balance, setBalance }) {
-  async function onChange(evt) {
-    const address = evt.target.value;
-    setAddress(address);
-    if (address) {
-      const {
-        data: { balance },
-      } = await server.get(`balance/${address}`);
-      setBalance(balance);
-    } else {
-      setBalance(0);
+function Wallet({initialAddress, initialBalance, dispatch}) {
+
+    const [balance, setBalance] = useState(initialBalance);
+    const [address, setAddress] = useState(initialAddress ?? "");
+
+    async function onChange(evt) {
+
+        const onChangeAddress = evt.target.value;
+
+        setAddress(onChangeAddress)
+
+        if (onChangeAddress) {
+
+            const {
+                data: {balance},
+            } = await axiosInstance.get(`wallets/${onChangeAddress}/balance`);
+
+            setBalance(balance)
+
+        }
     }
-  }
 
-  return (
-    <div className="container wallet">
-      <h1>Your Wallet</h1>
+    return (
+        <div className="container">
 
-      <label>
-        Wallet Address
-        <input placeholder="Type an address, for example: 0x1" value={address} onChange={onChange}></input>
-      </label>
+            <h1>Your Wallet</h1>
 
-      <div className="balance">Balance: {balance}</div>
-    </div>
-  );
+            <label>
+                Wallet Address
+                <input placeholder="Type an address, for example: 0x1" value={address} onChange={onChange}></input>
+            </label>
+
+            <div className="balance">Balance: {balance}</div>
+
+        </div>
+    );
 }
 
 export default Wallet;
