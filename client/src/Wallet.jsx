@@ -1,7 +1,7 @@
 import axiosInstance from "./axiosInstance.js";
 import {useState} from "react";
 
-function Wallet({initialAddress, initialBalance, dispatch}) {
+function Wallet({initialAddress, initialBalance}) {
 
     const [balance, setBalance] = useState(initialBalance);
     const [address, setAddress] = useState(initialAddress ?? "");
